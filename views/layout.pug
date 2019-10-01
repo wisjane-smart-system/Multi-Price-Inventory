@@ -1,0 +1,35 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    title Signin Multi Price
+    // Custom styles for this template
+    link(href='/bootstrap/css/style.css', rel='stylesheet')
+    // Bootstrap core CSS
+    link(href='/bootstrap/css/bootstrap.min.css', rel='stylesheet')
+    style.
+      .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      user-select: none;
+      }
+      @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+      }
+      }
+    
+  body.text-center
+    nav.navbar.navbar-dark.bg-dark
+      a.navbar-brand(href='#') Multi Price Inventory system
+    .container#mess(style='margin-top: 10px')
+        != messages('message', locals)
+    block content
+    .footer-copyright.text-center.text-black-50.py-3
+      | © 2019 Copyright:
+      a#cona(href='#')  Multi Price Inventory | By Kalla Giga
+      // Copyright
+      // Footer  
+
+  
