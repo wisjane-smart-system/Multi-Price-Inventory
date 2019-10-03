@@ -14,8 +14,8 @@ var csrfProtection = csrf({ cookie: true });
 
 // create express app
 var app = express();
-app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(express.static(path.join(__dirname, 'public')));
 //set session
 app.use(session({
 	secret: 'secret',
@@ -23,6 +23,14 @@ app.use(session({
 	saveUninitialized: true
 }));
 
+function authChecker(req, res, next) {
+  if (req.session.loggedin == true) {
+      next();
+  } else {
+     req.flash('warning', 'You are not Authorized to view this page! Please Log in');
+     res.redirect("/");
+  }
+}
 //set flash messages
 app.use(require('connect-flash')());
 app.use(function (req, res, next) {
@@ -68,7 +76,6 @@ var connection = mysqli.createConnection({
     
  });
 
-
  //login route
 app.post('/auth', function(request, response) {
     var username = request.body.username;
@@ -100,13 +107,12 @@ app.get('/reg', function(req, res){
 });
 
 //user-list 
-app.get('/user-list', csrfProtection, function(req, res){
-  
+app.get('/user-list',authChecker, csrfProtection, function(req, res){
   connection.query('SELECT * FROM users', function(error, results, fields) {
-    
         console.log(results);
         res.render('user-list',{
-          username: results[0].username
+          username: req.session.username,
+          user_list: results
         });
 });
 });
@@ -118,23 +124,23 @@ app.get('/', csrfProtection, function (req, res) {
   });
 
   //dashboard
-app.get('/dashboard', csrfProtection, function (req, res) { 
+app.get('/dashboard', authChecker, csrfProtection, function (req, res) { 
   connection.query('SELECT * FROM users', function(error, results, fields) {
       
     res.render('dashbord', {
-      username: results[0].username
+      username: req.session.username
     });
     });
     
   });
 
   //products
-  app.get('/main/products', csrfProtection, function (req, res) {
+  app.get('/main/products', authChecker, csrfProtection, function (req, res) {
     // pass the csrfToken to the view
     connection.query('SELECT * FROM users', function(error, results, fields) {
       
       res.render('products', {
-        username: results[0].username
+        username: req.session.username
       });
       });
     
