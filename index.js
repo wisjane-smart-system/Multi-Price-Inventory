@@ -5,7 +5,7 @@ var express = require('express')
     , mysqli = require('mysql');
 var session = require('express-session');
 var bodyParser = require('body-parser');
-
+const pug = require('pug');
 
 // setup route middlewares
 var csrfProtection = csrf({ cookie: true });
@@ -48,6 +48,7 @@ var connection = mysqli.createConnection({
     database : 'multiprice'
   });
    
+  //database connection
   connection.connect((function(err) {
     if (err) {
       console.log('Error While Connecting');
@@ -57,6 +58,27 @@ var connection = mysqli.createConnection({
     console.log('Connected..');
   }));
 
+
+  //checking auth 
+  function checkAuth(req, res, next){
+    if(req.session.loggedin){
+       next();     //If session exists, proceed to page
+    } else {
+       req.flash('danger', 'You are not Authenticated')
+       res.redirect('/')  //Error, trying to access unauthorized page!
+    }
+ }
+
+ //logout route
+ app.get('/logout', csrfProtection, function (req, res ,next){
+    req.session.loggedin = false;
+    req.flash('danger', 'logout successfully');
+    res.redirect('/');
+    
+ });
+
+
+ //login route
 app.post('/auth', function(request, response) {
     var username = request.body.username;
     var password = request.body.password;
@@ -65,9 +87,9 @@ app.post('/auth', function(request, response) {
             if (results.length > 0) {
                 request.session.loggedin = true;
                 request.session.username = username;
-
-                request.flash('success','welcome '+ request.body.username);
+                request.flash('success','welcome '+ request.session.username);
                 response.redirect('/dashboard');
+                
             } else {
                 request.flash('danger','Incorrect Username and/or Password!');
                 response.redirect('/');
@@ -78,6 +100,25 @@ app.post('/auth', function(request, response) {
         request.flash('info','Please Enter your Details');
         response.redirect('/');
     }
+ 
+});
+
+//logout middleware
+app.get('/logout', csrfProtection, function (req, res){
+
+  res.render('/', { csrfToken: req.csrfToken()});
+});
+
+//user-list 
+app.get('/user-list', csrfProtection, function(req, res){
+  connection.query('SELECT * FROM users', function(error, results, fields) {
+    if (results.length > 0) {
+        request.session.loggedin = true;
+        request.session.username = username;
+
+        console.log(results[0]);
+        res.render('user-list');
+}});
 });
 
 //route index
@@ -86,20 +127,31 @@ app.get('/', csrfProtection, function (req, res) {
     res.render('login',{ csrfToken: req.csrfToken() });
   });
 
-app.get('/dashboard', csrfProtection, function (req, res) {
-    // pass the csrfToken to the view
-    res.render('dashbord', { csrfToken: req.csrfToken() });
+  //dashboard
+app.get('/dashboard', csrfProtection, function (req, res) { 
+  connection.query('SELECT * FROM users', function(error, results, fields) {
+      
+    res.render('dashbord', {
+      username: results[0].username
+    });
+    });
     
   });
 
   //products
   app.get('/main/products', csrfProtection, function (req, res) {
     // pass the csrfToken to the view
-    res.render('products', { csrfToken: req.csrfToken() });
+    connection.query('SELECT * FROM users', function(error, results, fields) {
+      
+      res.render('products', {
+        username: results[0].username
+      });
+      });
     
   });
 
-
-  app.listen('9000', function(req, res){
-      console.log('server is listening to port .....9000');
+//app listening  to host with port
+  app.listen('5000', function(req, res){
+      console.log('server is listening to port .....5000');
+      
   });

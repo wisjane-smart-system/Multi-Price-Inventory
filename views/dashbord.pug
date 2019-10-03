@@ -12,29 +12,43 @@ html
     script(src='/bootstrap/js/sidebar.js')
   body
     #mySidebar.sidebar(onmouseover='toggleSidebar()', onmouseout='toggleSidebar()')
-        a(href='/main/products')
-            span
-            i.material-icons info
-            span.icon-text Products
-        br
-        a(href='#')
-            i.material-icons spa
-            span.icon-text
-            | Inventories
-        br
-        a(href='#')
-            i.material-icons monetization_on
-            span.icon-text
-            | Sell
-        br
-        a(href='#')
-            i.material-icons email
-            span.icon-text
-            | Users
-            span
-
+      a(href='/logout')
+          span
+          i.material-icons perm_identity
+          span.icon-text Welcom #{username}
+            button#show.btn.btn-lg.btn-primary.btn-block(type='submit') Sign out
+      a(href='/main/products')
+          span
+          i.material-icons info
+          span.icon-text Products
+      br
+      a(href='#')
+          i.material-icons spa
+          span.icon-text
+          | Inventories
+      br
+      a(href='#')
+          i.material-icons monetization_on
+          span.icon-text
+          | Sell
+      br
+      a(href='/user-list')
+          i.material-icons email
+          span.icon-text
+          | Users
+          span
+      br
+      a(href='/dashboard')
+          i.material-icons home
+          span.icon-text
+          | home
+          span
 
     block content
+    #main
+      .container#mess(style='margin-top: 10px')
+        != messages('message', locals)
+      
     .footer-copyright.text-center.text-black-50.py-3
       | © 2019 Copyright:
       a#cona(href='#')  Multi Price Inventory | By Kalla Giga
