@@ -1,0 +1,15 @@
+extends dashbord
+
+block content
+    .container
+        table#downabit.table
+            thead 
+                tr
+                    th(scope='col') #
+                    th(scope='col') name
+                    th(scope='col') password
+            tbody
+                tr
+                    th(scope='col') #{identity}
+                    th(scope='col') #{username}
+                    th(scope='col') #{password}

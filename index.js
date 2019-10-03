@@ -5,7 +5,9 @@ var express = require('express')
     , mysqli = require('mysql');
 var session = require('express-session');
 var bodyParser = require('body-parser');
-const pug = require('pug');
+
+//for encryption
+var bcrypt = require('bcrypt');
 
 // setup route middlewares
 var csrfProtection = csrf({ cookie: true });
@@ -58,17 +60,6 @@ var connection = mysqli.createConnection({
     console.log('Connected..');
   }));
 
-
-  //checking auth 
-  function checkAuth(req, res, next){
-    if(req.session.loggedin){
-       next();     //If session exists, proceed to page
-    } else {
-       req.flash('danger', 'You are not Authenticated')
-       res.redirect('/')  //Error, trying to access unauthorized page!
-    }
- }
-
  //logout route
  app.get('/logout', csrfProtection, function (req, res ,next){
     req.session.loggedin = false;
@@ -103,22 +94,21 @@ app.post('/auth', function(request, response) {
  
 });
 
-//logout middleware
-app.get('/logout', csrfProtection, function (req, res){
-
-  res.render('/', { csrfToken: req.csrfToken()});
+//user reg
+app.get('/reg', function(req, res){
+  
 });
 
 //user-list 
 app.get('/user-list', csrfProtection, function(req, res){
+  
   connection.query('SELECT * FROM users', function(error, results, fields) {
-    if (results.length > 0) {
-        request.session.loggedin = true;
-        request.session.username = username;
-
-        console.log(results[0]);
-        res.render('user-list');
-}});
+    
+        console.log(results);
+        res.render('user-list',{
+          username: results[0].username
+        });
+});
 });
 
 //route index
