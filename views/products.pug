@@ -1,26 +1,5 @@
 extends dashbord
 
-block content
-      .container
-        form(action='addproduct', method='POST').form-signin  
-          h1.h3.mb-3.font-weight-normal.text-center Add Products
-          label.sr-only(for='ProductName') Product Name
-          input#productname.form-control(type='text', name='productname',required='', placeholder='Enter Product Name', autofocus='')
-          br
-          label.sr-only(for='ProductQuantity') Product Quantity
-          input#productquanity.form-control(type='text', name='productquantity',required='', placeholder='Enter Quantity')
-          br
-          label.sr-only(for='TotalCost') Total Cost
-          input#totalcost.form-control(type='text', name='totalcost',required='', placeholder='Total Cost')
-          br
-          label.sr-only(for='CashPrice') Price For Cash
-          input#cashprice.form-control(type='text', name='cashprice',required='', placeholder='Cash Price')
-          br
-          label.sr-only(for='ChequePrice') Price For Cheque
-          input#chequeprice.form-control(type='text', name='chequeprice',required='', placeholder='Cheque Price')
-          br
-          label.sr-only(for='CreditPrice') Price For Credit
-          input#creditprice.form-control(type='text', name='creditprice',required='', placeholder='Credit Price')
-          br
-          button.btn.btn-lg.btn-primary.btn-block(type='submit') Add Product
-      
+block dashboard
+    
+    block product

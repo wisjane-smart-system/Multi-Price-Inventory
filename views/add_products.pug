@@ -1,0 +1,20 @@
+extends products
+
+block product
+      .container
+        form(action='addproduct', method='POST').form-signin  
+          h1.h3.mb-3.font-weight-normal.text-center Add Products
+          input#productname.form-control(type='text', name='productname',required='', placeholder='Enter Product Name', autofocus='')
+          br
+          input#productquanity.form-control(type='text', name='productquantity',required='', placeholder='Enter Quantity')
+          br
+          input#totalcost.form-control(type='text', name='totalcost',required='', placeholder='Total Cost')
+          br
+          input#cashprice.form-control(type='text', name='cashprice',required='', placeholder='Cash Price')
+          br
+          input#chequeprice.form-control(type='text', name='chequeprice',required='', placeholder='Cheque Price')
+          br
+          input#creditprice.form-control(type='text', name='creditprice',required='', placeholder='Credit Price')
+          br
+          button.btn.btn-lg.btn-primary.btn-block(type='submit') Add Product
+      

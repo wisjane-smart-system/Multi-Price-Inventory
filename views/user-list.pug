@@ -1,18 +1,18 @@
 extends dashbord
 
-block content
-    .container
-        table#downabit.table
+block dashboard
+      .container#downabit
+        table.table
             thead 
                 tr
-                    th(scope='col') #
+                th(scope='col') #
                     th(scope='col') name
                     th(scope='col') email
                     th(scope='col') password
             tbody
             for user in user_list
                 tr
-                    th(scope='col') #{user.id}
-                    th(scope='col') #{user.username}
-                    th(scope='col') #{user.email}
-                    th(scope='col') #{user.password}
+                th(scope='col') #{user.id}
+                th(scope='col') #{user.username}
+                th(scope='col') #{user.email}
+                th(scope='col') #{user.password}

@@ -23,6 +23,8 @@ app.use(session({
 	saveUninitialized: true
 }));
 
+
+//function to check authentication
 function authChecker(req, res, next) {
   if (req.session.loggedin == true) {
       next();
@@ -31,6 +33,7 @@ function authChecker(req, res, next) {
      res.redirect("/");
   }
 }
+
 //set flash messages
 app.use(require('connect-flash')());
 app.use(function (req, res, next) {
@@ -38,7 +41,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-
+//bodyparser middleware
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
 
@@ -108,46 +111,45 @@ app.get('/reg', function(req, res){
 
 //user-list 
 app.get('/user-list',authChecker, csrfProtection, function(req, res){
-  connection.query('SELECT * FROM users', function(error, results, fields) {
-        console.log(results);
-        res.render('user-list',{
-          username: req.session.username,
-          user_list: results
-        });
+  connection.query('SELECT *, (SELECT COUNT(*) FROM users) as total FROM users', function(error, results, fields) {
+    res.render('user-list', {
+      username: req.session.username,
+      user_list: results,
+      user: results[0].total
+    });
 });
 });
 
+//dashboard
+app.get('/dashboard', authChecker, csrfProtection, function (req, res) { 
+  connection.query('SELECT *, (SELECT COUNT(*) FROM users) as total FROM users', function(error, results, fields) {
+    res.render('dashbord', {
+      username: req.session.username,
+      user: results[0].total
+    });
+    });
+});
+
+//products
+app.get('/products', authChecker, csrfProtection, function (req, res) {
+  connection.query('SELECT *, (SELECT COUNT(*) FROM users) as total FROM users', function(error, results, fields) {
+    res.render('products', {
+      username: req.session.username,
+      user: results[0].total
+    });
+    });
+  
+});
+
+  
 //route index
 app.get('/', csrfProtection, function (req, res) {
-    // pass the csrfToken to the view
-    res.render('login',{ csrfToken: req.csrfToken() });
-  });
-
-  //dashboard
-app.get('/dashboard', authChecker, csrfProtection, function (req, res) { 
-  connection.query('SELECT * FROM users', function(error, results, fields) {
-      
-    res.render('dashbord', {
-      username: req.session.username
-    });
-    });
-    
-  });
-
-  //products
-  app.get('/main/products', authChecker, csrfProtection, function (req, res) {
-    // pass the csrfToken to the view
-    connection.query('SELECT * FROM users', function(error, results, fields) {
-      
-      res.render('products', {
-        username: req.session.username
-      });
-      });
-    
-  });
+  // pass the csrfToken to the view
+  res.render('login',{ csrfToken: req.csrfToken() });
+});
 
 //app listening  to host with port
-  app.listen('5000', function(req, res){
-      console.log('server is listening to port .....5000');
-      
-  });
+app.listen('5000', function(req, res){
+    console.log('server is listening to port .....5000');
+    
+});
