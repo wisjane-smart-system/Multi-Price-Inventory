@@ -106,7 +106,14 @@ app.post('/auth', function(request, response) {
 
 //user reg
 app.get('/reg', function(req, res){
-  
+  var userName = 'Tufail'
+  var userPass = '1234'
+  bcrypt.hash(userPass, 10, function(err, hash) {
+    connection.query('INSERT INTO users VALUES ("", "'+userName+'", "'+hash+'", "Tufail@1234")', function(err, results, fields){
+      res.send(results)
+    })
+    console.log(hash)
+  });
 });
 
 //user-list 
