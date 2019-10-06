@@ -9,6 +9,7 @@ block dashboard
                     th(scope='col') name
                     th(scope='col') email
                     th(scope='col') password
+                    th(scope='col') Action
             tbody
             for user in user_list
                 tr
@@ -16,3 +17,10 @@ block dashboard
                 th(scope='col') #{user.username}
                 th(scope='col') #{user.email}
                 th(scope='col') #{user.password}
+                th(scope='col')
+                  a(href="") 
+                    i#items.fa.fa-pencil(style='font-size:24px; color: #6589ec')
+                  a(href="")
+                    i#items.fa.fa-plus-circle(style='font-size:24px; color: #38bb7e')
+                  a(href="")
+                    i#items.fa.fa-remove(style='font-size:24px; color: #eb442e')

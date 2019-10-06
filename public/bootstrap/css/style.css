@@ -39,7 +39,7 @@
 .brand_logo_container {
   width: 150px;
   border-radius: 50%;
-  background: #60a3bc;
+  background: #bc6b60;
   padding: 10px;
   text-align: center;
 }
@@ -128,4 +128,9 @@ main .sidebar {
 .card-header{
   font-size: 24px;
   font-weight: 500;
+}
+
+#items{
+  margin-right: 10px;
+  float: left;
 }

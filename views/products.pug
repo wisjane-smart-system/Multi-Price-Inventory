@@ -1,5 +1,33 @@
 extends dashbord
 
 block dashboard
-    
+    .text-right
+                a(href="/add_products")
+                    button.btn.btn-primary.btn-lg(type='button') Add Product
+    .container#downabit
+        table.table
+            thead 
+                tr
+                th(scope='col') #
+                    th(scope='col') Product Name
+                    th(scope='col') Quantity
+                    th(scope='col') Cash Price
+                    th(scope='col') Credit Price
+                    th(scope='col') Cheque Price
+            tbody
+            for user in user_list
+                tr
+                th(scope='col') #{user.id}
+                th(scope='col') #{user.username}
+                th(scope='col') #{user.email}
+                th(scope='col') #{user.id}
+                th(scope='col') #{user.username}
+                th(scope='col') #{user.email}
+                th(scope='col')
+                  a(href="") 
+                    i#items.fa.fa-pencil(style='font-size:24px; color: #6589ec')
+                  a(href="")
+                    i#items.fa.fa-plus-circle(style='font-size:24px; color: #38bb7e')
+                  a(href="")
+                    i#items.fa.fa-remove(style='font-size:24px; color: #eb442e')
     block product

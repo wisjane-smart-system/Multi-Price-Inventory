@@ -8,7 +8,7 @@ html
     link(rel="stylesheet", href='/bootstrap/css/bootstrap.min.css')
     link(href='/bootstrap/css/style.css', rel='stylesheet')
     link(rel='stylesheet', href='https://fonts.googleapis.com/icon?family=Material+Icons')
-
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
     script(src='/bootstrap/js/sidebar.js')
     
   body
@@ -71,11 +71,10 @@ html
                             h5.card-title Success card title
                             p.card-text
                                 | Some quick example text to build on the card title and make up the bulk of the card's content.
-            .text-right
-                button.btn.btn-primary.btn-lg(type='button') Add Product
+            
             block dashboard
-    .footer-copyright.text-center.text-black-50.py-3
-      | © 2019 Copyright:
-      a#cona(href='#')  Multi Price Inventory | By Kalla Giga
-      // Copyright
-      // Footer  
+      .footer-copyright.text-center.text-black-50.py-3
+        | © 2019 Copyright:
+        a#cona(href='#')  Multi Price Inventory | By Kalla Giga
+        // Copyright
+        // Footer  
