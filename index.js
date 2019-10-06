@@ -83,38 +83,39 @@ var connection = mysqli.createConnection({
 app.post('/auth', function(request, response) {
     var username = request.body.username;
     var password = request.body.password;
-    if (username && password) {
-        connection.query('SELECT * FROM users WHERE username = ? AND password = ?', [username, password], function(error, results, fields) {
-            if (results.length > 0) {
+        connection.query('SELECT * FROM users WHERE username = ?', [username], function(error, results, fields) {
+          if (results.length > 0) {
+              bcrypt.compare(password, results[0].password, function(err, result){
+                if(result==true){
                 request.session.loggedin = true;
                 request.session.username = username;
                 request.flash('success','welcome '+ request.session.username);
                 response.redirect('/dashboard');
-                
-            } else {
-                request.flash('danger','Incorrect Username and/or Password!');
-                response.redirect('/');
-            }			
-            response.end();
-        });
-    } else {
-        request.flash('info','Please Enter your Details');
-        response.redirect('/');
-    }
- 
+                }
+                else {
+                  request.flash('danger','Incorrect Username and/or Password!');
+                  response.redirect('/');
+              } 
+            })		
+        }
+        else{
+          request.flash('warning', 'Details not Found! Please Contact your Admin for registration')
+          response.redirect('/')
+        }
+      })
 });
 
-//user reg
-app.get('/reg', function(req, res){
-  var userName = 'Tufail'
-  var userPass = '1234'
-  bcrypt.hash(userPass, 10, function(err, hash) {
-    connection.query('INSERT INTO users VALUES ("", "'+userName+'", "'+hash+'", "Tufail@1234")', function(err, results, fields){
-      res.send(results)
-    })
-    console.log(hash)
-  });
-});
+// //user reg
+// app.get('/reg', function(req, res){
+//   var userName = 'Tufail'
+//   var userPass = '1234'
+//   bcrypt.hash(userPass, 10, function(err, hash) {
+//     connection.query('INSERT INTO users VALUES ("", "'+userName+'", "'+hash+'", "Tufail@1234")', function(err, results, fields){
+//       res.send(results)
+//     })
+//     console.log(hash)
+//   });
+// });
 
 //user-list 
 app.get('/user-list',authChecker, csrfProtection, function(req, res){
