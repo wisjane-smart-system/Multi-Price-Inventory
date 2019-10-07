@@ -62,7 +62,8 @@ var connection = mysqli.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'multiprice'
+  database: 'multiprice',
+  multipleStatements: true
 });
 
 //database connection
@@ -83,6 +84,13 @@ app.get('/logout', csrfProtection, function (req, res, next) {
 
 });
 
+// app.get('/test', function(req, res){
+//   connection.query('SELECT username FROM users; SELECT email FROM users', [1, 2], function(err, results, fields){
+//     console.log(results[0])
+//     console.log(results[1])
+//   })
+// })
++
 //login route
 app.post('/auth', function (request, response) {
   var username = request.body.username;
@@ -142,22 +150,39 @@ app.get('/dashboard', authChecker, csrfProtection, function (req, res) {
 
 //products
 app.get('/products', authChecker, csrfProtection, function (req, res) {
-  connection.query('SELECT *, (SELECT COUNT(*) FROM users) as total FROM users', function (error, results, fields) {
+  connection.query('SELECT *, (SELECT COUNT(*) FROM users) as total FROM users; SELECT * FROM products', [1,2],function (error, results, fields) {
     res.render('products', {
       username: req.session.username,
-      user_list: results,
-      user: results[0].total
+      user: results[0].total,
+      product_list: results[1],
     });
   });
 
 });
 
+//add products route middleware
+app.post('/addproduct', function (request, response) {
+  var productName = request.body.productname;
+  var productQuantity = request.body.productquantity;
+  var totalCost = request.body.totalcost;
+  var cashPrice = request.body.cashprice;
+  var chequePrice = request.body.chequeprice;
+  var creditPrice = request.body.creditprice;
+  connection.query('INSERT INTO products VALUES ("","'+productName+'","'+productQuantity+'","'+totalCost+'","'+cashPrice+'","'+chequePrice+'","'+creditPrice+'")', function (error, results, fields) {
+    
+    request.flash('success', 'Product Added Successfully')
+    response.redirect('/products')
+  })
+});
+
+
 //add product
 app.get('/add_products', authChecker, csrfProtection, function (req, res) {
-  connection.query('SELECT *, (SELECT COUNT(*) FROM users) as total FROM users', function (error, results, fields) {
+  connection.query('SELECT *, (SELECT COUNT(*) FROM users) as total FROM users; ', function (error, results, fields) {
     res.render('add_products', {
       username: req.session.username,
       user: results[0].total
+      
     });
   });
 })

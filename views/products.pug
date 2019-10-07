@@ -9,20 +9,23 @@ block dashboard
             thead 
                 tr
                 th(scope='col') #
-                    th(scope='col') Product Name
-                    th(scope='col') Quantity
-                    th(scope='col') Cash Price
-                    th(scope='col') Credit Price
-                    th(scope='col') Cheque Price
+                  th(scope='col') Product Name
+                  th(scope='col') Quantity
+                  th(scope='col') Total Cost
+                  th(scope='col') Cash Price
+                  th(scope='col') Credit Price
+                  th(scope='col') Cheque Price
+                  th(scope='col') Action
             tbody
-            for user in user_list
+            for product in product_list
                 tr
-                th(scope='col') #{user.id}
-                th(scope='col') #{user.username}
-                th(scope='col') #{user.email}
-                th(scope='col') #{user.id}
-                th(scope='col') #{user.username}
-                th(scope='col') #{user.email}
+                th(scope='col') #{product.id}
+                th(scope='col') #{product.product_name}
+                th(scope='col') #{product.quantinty}
+                th(scope='col') #{product.total_cost}
+                th(scope='col') #{product.cash_price}
+                th(scope='col') #{product.cheque_price}
+                th(scope='col') #{product.credit_price}
                 th(scope='col')
                   a(href="") 
                     i#items.fa.fa-pencil(style='font-size:24px; color: #6589ec')
