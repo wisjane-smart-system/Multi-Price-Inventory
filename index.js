@@ -5,6 +5,7 @@ var express = require('express'),
   mysqli = require('mysql');
 var session = require('express-session');
 var bodyParser = require('body-parser');
+var async = require('async');
 
 //for encryption
 var bcrypt = require('bcrypt');
@@ -91,29 +92,29 @@ app.get('/logout', csrfProtection, function (req, res, next) {
 //   })
 // })
 +
-//login route
-app.post('/auth', function (request, response) {
-  var username = request.body.username;
-  var password = request.body.password;
-  connection.query('SELECT * FROM users WHERE username = ?', [username], function (error, results, fields) {
-    if (results.length > 0) {
-      bcrypt.compare(password, results[0].password, function (err, result) {
-        if (result == true) {
-          request.session.loggedin = true;
-          request.session.username = username;
-          request.flash('success', 'welcome ' + request.session.username);
-          response.redirect('/dashboard');
-        } else {
-          request.flash('danger', 'Incorrect Username and/or Password!');
-          response.redirect('/');
-        }
-      })
-    } else {
-      request.flash('warning', 'Details not Found! Please Contact your Admin for registration')
-      response.redirect('/')
-    }
-  })
-});
+  //login route
+  app.post('/auth', function (request, response) {
+    var username = request.body.username;
+    var password = request.body.password;
+    connection.query('SELECT * FROM users WHERE username = ?', [username], function (error, results, fields) {
+      if (results.length > 0) {
+        bcrypt.compare(password, results[0].password, function (err, result) {
+          if (result == true) {
+            request.session.loggedin = true;
+            request.session.username = username;
+            request.flash('success', 'welcome ' + request.session.username);
+            response.redirect('/dashboard');
+          } else {
+            request.flash('danger', 'Incorrect Username and/or Password!');
+            response.redirect('/');
+          }
+        })
+      } else {
+        request.flash('warning', 'Details not Found! Please Contact your Admin for registration')
+        response.redirect('/')
+      }
+    })
+  });
 
 // //user reg
 // app.get('/reg', function(req, res){
@@ -129,31 +130,61 @@ app.post('/auth', function (request, response) {
 
 //user-list 
 app.get('/user-list', authChecker, csrfProtection, function (req, res) {
-  connection.query('SELECT *, (SELECT COUNT(*) FROM users) as total FROM users', function (error, results, fields) {
+  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products', [1, 2], function (error, results, fields) {
+    for (var i = 0; i < results[0].length; i++) {
+
+      for (var j = 0; j < results[1].length; j++) {
+        var vim = results[1][j];
+      }
+      var row = results[0][i];
+    }
+
     res.render('user-list', {
       username: req.session.username,
-      user_list: results,
-      user: results[0].total
+      user: row.total,
+      product: vim.totalq,
+      user_list: results[0],
+      product_list: results[1],
     });
   });
 });
 
 //dashboard
 app.get('/dashboard', authChecker, csrfProtection, function (req, res) {
-  connection.query('SELECT *, (SELECT COUNT(*) FROM users) as total FROM users', function (error, results, fields) {
+  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products', [1, 2], function (error, results, fields) {
+    for (var i = 0; i < results[0].length; i++) {
+
+      for (var j = 0; j < results[1].length; j++) {
+        var vim = results[1][j];
+      }
+      var row = results[0][i];
+    }
+
     res.render('dashbord', {
       username: req.session.username,
-      user: results[0].total
+      user: row.total,
+      product: vim.totalq,
+      product_list: results[1],
     });
   });
 });
 
 //products
 app.get('/products', authChecker, csrfProtection, function (req, res) {
-  connection.query('SELECT *, (SELECT COUNT(*) FROM users) as total FROM users; SELECT * FROM products', [1,2],function (error, results, fields) {
+
+  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products', [1, 2], function (error, results, fields) {
+    for (var i = 0; i < results[0].length; i++) {
+
+      for (var j = 0; j < results[1].length; j++) {
+        var vim = results[1][j];
+      }
+      var row = results[0][i];
+    }
+
     res.render('products', {
       username: req.session.username,
-      user: results[0].total,
+      user: row.total,
+      product: vim.totalq,
       product_list: results[1],
     });
   });
@@ -168,8 +199,8 @@ app.post('/addproduct', function (request, response) {
   var cashPrice = request.body.cashprice;
   var chequePrice = request.body.chequeprice;
   var creditPrice = request.body.creditprice;
-  connection.query('INSERT INTO products VALUES ("","'+productName+'","'+productQuantity+'","'+totalCost+'","'+cashPrice+'","'+chequePrice+'","'+creditPrice+'")', function (error, results, fields) {
-    
+  connection.query('INSERT INTO products VALUES ("","' + productName + '","' + productQuantity + '","' + totalCost + '","' + cashPrice + '","' + chequePrice + '","' + creditPrice + '")', function (error, results, fields) {
+
     request.flash('success', 'Product Added Successfully')
     response.redirect('/products')
   })
@@ -178,11 +209,20 @@ app.post('/addproduct', function (request, response) {
 
 //add product
 app.get('/add_products', authChecker, csrfProtection, function (req, res) {
-  connection.query('SELECT *, (SELECT COUNT(*) FROM users) as total FROM users; ', function (error, results, fields) {
+  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products', [1, 2], function (error, results, fields) {
+    for (var i = 0; i < results[0].length; i++) {
+
+      for (var j = 0; j < results[1].length; j++) {
+        var vim = results[1][j];
+      }
+      var row = results[0][i];
+    }
+
     res.render('add_products', {
       username: req.session.username,
-      user: results[0].total
-      
+      user: row.total,
+      product: vim.totalq,
+      product_list: results[1],
     });
   });
 })
@@ -190,9 +230,7 @@ app.get('/add_products', authChecker, csrfProtection, function (req, res) {
 //route index
 app.get('/', csrfProtection, function (req, res) {
   // pass the csrfToken to the view
-  res.render('login', {
-    csrfToken: req.csrfToken()
-  });
+  res.render('login', { csrfToken: req.csrfToken() });
 });
 
 //app listening  to host with port
