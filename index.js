@@ -206,7 +206,26 @@ app.post('/addproduct', function (request, response) {
   })
 });
 
+//sell product
+app.get('/product/sell', authChecker, csrfProtection, function (req, res) {
 
+  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products', [1, 2], function (error, results, fields) {
+    for (var i = 0; i < results[0].length; i++) {
+
+      for (var j = 0; j < results[1].length; j++) {
+        var vim = results[1][j];
+      }
+      var row = results[0][i];
+    }
+
+    res.render('sell', {
+      username: req.session.username,
+      user: row.total,
+      product: vim.totalq,
+      product_list: results[1],
+    });
+  });
+})
 //add product
 app.get('/add_products', authChecker, csrfProtection, function (req, res) {
   connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products', [1, 2], function (error, results, fields) {
