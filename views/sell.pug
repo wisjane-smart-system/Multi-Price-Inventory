@@ -2,31 +2,50 @@ extends dashbord
 
 block dashboard
     .container#selling
-        .row
-            .col-md-6 
-                table.table
-                    thead 
-                        tr
-                        th(scope='col') #
-                        th(scope='col') Product Name
-                        th(scope='col') Quantity
-                        th(scope='col') Total Cost
-                        th(scope='col') Cash Price
-                        th(scope='col') Credit Price
-                        th(scope='col') Cheque Price
-                        th(scope='col') Action
-                    tbody
-                    for product in product_list
-                        tr
-                        th(scope='col') #{product.id}
-                        th(scope='col') #{product.product_name}
-                        th(scope='col') #{product.quantinty}
-                        th(scope='col') #{product.total_cost}
-                        th(scope='col') #{product.cash_price}
-                        th(scope='col') #{product.cheque_price}
-                        th(scope='col') #{product.credit_price}
-                        th(scope='col')
-                            a(href="") 
-                                i.material-icons#items add
-            .col-md-5 Second DIV 
+      form(action="searchProd", method="POST")
+        input#inputSearch.form-control(type='text', name='search_product', placeholder='Search Product', autofocus='')
+      br
+      .row
+        .col-md-6 
+            table.table#sellTable
+                thead 
+                    tr
+                    th(scope='col') #
+                    th(scope='col') Product Name
+                    th(scope='col') Quantity
+                    th(scope='col') Total Cost
+                    th(scope='col') Cash Price
+                    th(scope='col') Credit Price
+                    th(scope='col') Cheque Price
+                    th(scope='col') Action
+                tbody
+                for product in product_list
+                    tr
+                    th(scope='col') #{product.id}
+                    th.product_name(scope='col') #{product.product_name}
+                    th.quantity(scope='col') #{product.quantinty}
+                    th.total_cost(scope='col') #{product.total_cost}
+                    th(scope='col') #{product.cash_price}
+                    th(scope='col') #{product.cheque_price}
+                    th(scope='col') #{product.credit_price}
+                    th(scope='col')
+                      // Button trigger modal
+                      button.btn.btn-primary(type='button', data-toggle='modal' data-target='#exampleModalCenter')
+                          | Sell
+                      // Modal
+                      #exampleModalCenter.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true')
+                        .modal-dialog.modal-dialog-centered(role='document')
+                          .modal-content
+                            .modal-header
+                              h5#exampleModalLongTitle.modal-title Modal title
+                              button.close(type='button', data-dismiss='modal', aria-label='Close')
+                              span(aria-hidden='true') X
+                            .modal-body
+
+                            .modal-footer
+                              button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+                              button.btn.btn-primary(type='button') Save changes             
+        .col-md-5
+              
+
 

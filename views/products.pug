@@ -5,7 +5,7 @@ block dashboard
                 a(href="/add_products")
                     button.btn.btn-primary.btn-lg(type='button') Add Product
     .container#downabit
-        table.table
+        table.table#table
             thead 
                 tr
                 th(scope='col') #
@@ -28,9 +28,10 @@ block dashboard
                 th(scope='col') #{product.credit_price}
                 th(scope='col')
                   a(href="") 
-                    i#items.fa.fa-pencil(style='font-size:24px; color: #6589ec')
+                    i#items.fa.fa-pencil(style='font-size:24px; color: #6589ec;')
                   a(href="")
                     i#items.fa.fa-plus-circle(style='font-size:24px; color: #38bb7e')
                   a(href="")
                     i#items.fa.fa-remove(style='font-size:24px; color: #eb442e')
+
     block product

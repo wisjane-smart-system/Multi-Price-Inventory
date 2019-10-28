@@ -7,10 +7,14 @@ html
     // Custom styles for this templates
     link(rel="stylesheet", href='/bootstrap/css/bootstrap.min.css')
     link(href='/bootstrap/css/style.css', rel='stylesheet')
+
     link(rel='stylesheet', href='https://fonts.googleapis.com/icon?family=Material+Icons')
     link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js')
     script(src='/bootstrap/js/sidebar.js')
-    
+    script(src='/bootstrap/js/select_table.js')
   body
     #mySidebar.sidebar(onmouseover='toggleSidebar()', onmouseout='toggleSidebar()')
       a(href='/logout')
@@ -68,7 +72,7 @@ html
                     .card.text-white.bg-success.mb-3(style='max-width: 18rem;')
                         .card-header Total Cost
                         .card-body
-                            h5.card-title #{product}
+                            h5.card-title #{totalQ}
                             p.card-text
                                 | Total Cost of all products available
             
@@ -77,4 +81,5 @@ html
         | © 2019 Copyright:
         a#cona(href='#')  Multi Price Inventory | By Kalla Giga
         // Copyright
-        // Footer  
+        // Footer 
+    

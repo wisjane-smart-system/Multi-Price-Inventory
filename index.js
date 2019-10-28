@@ -115,7 +115,12 @@ app.get('/logout', csrfProtection, function (req, res, next) {
       }
     })
   });
-
+app.post('/sell_temp', function (req, res) {
+  
+  var name = req.body.productname;
+  req.flash('success', 'horaaaah horaaah'+name)
+  res.redirect('/product/sell')
+})
 // //user reg
 // app.get('/reg', function(req, res){
 //   var userName = 'Tufail'
@@ -130,20 +135,24 @@ app.get('/logout', csrfProtection, function (req, res, next) {
 
 //user-list 
 app.get('/user-list', authChecker, csrfProtection, function (req, res) {
-  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products', [1, 2], function (error, results, fields) {
+  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products; SELECT SUM(total_cost) as totalQ FROM products', [1, 2, 3], function (error, results, fields) {
     for (var i = 0; i < results[0].length; i++) {
 
       for (var j = 0; j < results[1].length; j++) {
         var vim = results[1][j];
+      }
+      for (var k = 0; k < results[2].length; k++) {
+        var to = results[2][k];
       }
       var row = results[0][i];
     }
 
     res.render('user-list', {
       username: req.session.username,
+      totalQ: to.totalQ,
       user: row.total,
-      product: vim.totalq,
       user_list: results[0],
+      product: vim.totalq,
       product_list: results[1],
     });
   });
@@ -151,17 +160,21 @@ app.get('/user-list', authChecker, csrfProtection, function (req, res) {
 
 //dashboard
 app.get('/dashboard', authChecker, csrfProtection, function (req, res) {
-  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products', [1, 2], function (error, results, fields) {
+  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products; SELECT SUM(total_cost) as totalQ FROM products', [1, 2, 3], function (error, results, fields) {
     for (var i = 0; i < results[0].length; i++) {
 
       for (var j = 0; j < results[1].length; j++) {
         var vim = results[1][j];
+      }
+      for (var k = 0; k < results[2].length; k++) {
+        var to = results[2][k];
       }
       var row = results[0][i];
     }
 
     res.render('dashbord', {
       username: req.session.username,
+      totalQ: to.totalQ,
       user: row.total,
       product: vim.totalq,
       product_list: results[1],
@@ -172,17 +185,21 @@ app.get('/dashboard', authChecker, csrfProtection, function (req, res) {
 //products
 app.get('/products', authChecker, csrfProtection, function (req, res) {
 
-  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products', [1, 2], function (error, results, fields) {
+  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products; SELECT SUM(total_cost) as totalQ FROM products', [1, 2, 3], function (error, results, fields) {
     for (var i = 0; i < results[0].length; i++) {
 
       for (var j = 0; j < results[1].length; j++) {
         var vim = results[1][j];
+      }
+      for (var k = 0; k < results[2].length; k++) {
+        var to = results[2][k];
       }
       var row = results[0][i];
     }
 
     res.render('products', {
       username: req.session.username,
+      totalQ: to.totalQ,
       user: row.total,
       product: vim.totalq,
       product_list: results[1],
@@ -199,27 +216,36 @@ app.post('/addproduct', function (request, response) {
   var cashPrice = request.body.cashprice;
   var chequePrice = request.body.chequeprice;
   var creditPrice = request.body.creditprice;
-  connection.query('INSERT INTO products VALUES ("","' + productName + '","' + productQuantity + '","' + totalCost + '","' + cashPrice + '","' + chequePrice + '","' + creditPrice + '")', function (error, results, fields) {
-
-    request.flash('success', 'Product Added Successfully')
-    response.redirect('/products')
+  connection.query('INSERT INTO products VALUES ("","' + productName + '","' + productQuantity + '","' + totalCost + '","' + cashPrice + '","' + chequePrice + '","' + creditPrice + '"); INSERT INTO inventories VALUES ("","' + productName + '","' + productQuantity + '","' + totalCost + '","' + cashPrice + '","' + chequePrice + '","' + creditPrice + '")',[1, 2], function (error, results, fields) {
+    if(results.length > 0){
+      request.flash('success', 'Product Added Successfully')
+      response.redirect('/products')
+    }
+    else{
+      request.flash('danger', error)
+      response.redirect('/products')
+    }
   })
 });
 
 //sell product
 app.get('/product/sell', authChecker, csrfProtection, function (req, res) {
 
-  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products', [1, 2], function (error, results, fields) {
+  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products; SELECT SUM(total_cost) as totalQ FROM products', [1, 2, 3], function (error, results, fields) {
     for (var i = 0; i < results[0].length; i++) {
 
       for (var j = 0; j < results[1].length; j++) {
         var vim = results[1][j];
+      }
+      for (var k = 0; k < results[2].length; k++) {
+        var to = results[2][k];
       }
       var row = results[0][i];
     }
 
     res.render('sell', {
       username: req.session.username,
+      totalQ: to.totalQ,
       user: row.total,
       product: vim.totalq,
       product_list: results[1],
@@ -228,17 +254,21 @@ app.get('/product/sell', authChecker, csrfProtection, function (req, res) {
 })
 //add product
 app.get('/add_products', authChecker, csrfProtection, function (req, res) {
-  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products', [1, 2], function (error, results, fields) {
+  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products; SELECT SUM(total_cost) as totalQ FROM products', [1, 2, 3], function (error, results, fields) {
     for (var i = 0; i < results[0].length; i++) {
 
       for (var j = 0; j < results[1].length; j++) {
         var vim = results[1][j];
+      }
+      for (var k = 0; k < results[2].length; k++) {
+        var to = results[2][k];
       }
       var row = results[0][i];
     }
 
     res.render('add_products', {
       username: req.session.username,
+      totalQ: to.totalQ,
       user: row.total,
       product: vim.totalq,
       product_list: results[1],
