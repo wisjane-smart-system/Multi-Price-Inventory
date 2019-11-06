@@ -6,46 +6,84 @@ block dashboard
         input#inputSearch.form-control(type='text', name='search_product', placeholder='Search Product', autofocus='')
       br
       .row
-        .col-md-6 
-            table.table#sellTable
+        .col-md-6
+          h3.text-center PRODUCT LIST
+          br 
+          table.table#sellTable
+              thead 
+                  tr
+                  th(scope='col') #
+                  th(scope='col') Product Name
+                  th(scope='col') Quantity
+                  th(scope='col') Total Cost
+                  th(scope='col') Cash Price
+                  th(scope='col') Credit Price
+                  th(scope='col') Cheque Price
+                  th(scope='col') Action
+              tbody
+              for product in product_list
+                  tr
+                  th(scope='col') #{product.id}
+                  th.product_name(scope='col') #{product.product_name}
+                  th.quantity(scope='col') #{product.quantinty}
+                  th.total_cost(scope='col') #{product.total_cost}
+                  th(scope='col') #{product.cash_price}
+                  th(scope='col') #{product.cheque_price}
+                  th(scope='col') #{product.credit_price}
+                  th(scope='col')
+                    // Button trigger modal
+                    button.btn.btn-primary(type='button', data-toggle='modal' data-target='#ModalCenter' id='#sellsModal')
+                        | Sell
+                  // Modal
+                  #ModalCenter.modal.fade(tabindex='-1', role='dialog', aria-labelledby='ModalCenterTitle', aria-hidden='true')
+                    .modal-dialog.modal-dialog-centered(role='document')
+                      .modal-content
+                        .modal-header
+                          h5#exampleModalLongTitle.modal-title Selling Panel
+                          button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        .modal-body
+                          .justify-content-center
+                            form(action='sell', method='POST')
+                              .input-group-prepend
+                                span#kalla
+                                input.form-control.input(type='text', name='quantityQ', placeholder='Enter Quantity')
+                              .modal-footer
+                                button.btn.btn-secondary.btn-danger(type='button', data-dismiss='modal' id='cancel') Cancel
+                                button.btn.btn-primary(type='submit' id='kkkk') Sell             
+        .col-md-5
+          h3.text-center SELLING PANEL
+          br
+          table.table#sellTable
                 thead 
                     tr
                     th(scope='col') #
                     th(scope='col') Product Name
                     th(scope='col') Quantity
-                    th(scope='col') Total Cost
-                    th(scope='col') Cash Price
-                    th(scope='col') Credit Price
-                    th(scope='col') Cheque Price
-                    th(scope='col') Action
+                    th(scope='col') Cost
                 tbody
-                for product in product_list
+                for product in temp1
                     tr
                     th(scope='col') #{product.id}
-                    th.product_name(scope='col') #{product.product_name}
-                    th.quantity(scope='col') #{product.quantinty}
-                    th.total_cost(scope='col') #{product.total_cost}
-                    th(scope='col') #{product.cash_price}
-                    th(scope='col') #{product.cheque_price}
-                    th(scope='col') #{product.credit_price}
-                    th(scope='col')
-                      // Button trigger modal
-                      button.btn.btn-primary(type='button', data-toggle='modal' data-target='#exampleModalCenter')
-                          | Sell
-                      // Modal
-                      #exampleModalCenter.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true')
-                        .modal-dialog.modal-dialog-centered(role='document')
-                          .modal-content
-                            .modal-header
-                              h5#exampleModalLongTitle.modal-title Modal title
-                              button.close(type='button', data-dismiss='modal', aria-label='Close')
-                              span(aria-hidden='true') X
-                            .modal-body
-
-                            .modal-footer
-                              button.btn.btn-secondary(type='button', data-dismiss='modal') Close
-                              button.btn.btn-primary(type='button') Save changes             
-        .col-md-5
-              
-
-
+                    th(scope='col') #{product.product_name}
+                    th(scope='col') #{product.quantity}
+                    th(scope='col') #{product.cash_type}
+          .container
+            .row
+              .col-lg-5
+                select.form-control
+                  option(value='cashtype') Cash Type
+                  option(value='credittype') Credit Type
+                  option(value='cheque') Cheque
+              .col-lg-4
+                label#grand GRAND TOTAL
+              .col-lg-3
+                label#total 123456
+            br
+            .container
+              .row#sells.justify-content-center
+                .col-sm-5
+                  form(action='sells', method='POST')
+                    button.btn.btn-secondary.btn-success(type='button') SELL
+                .col-sm-5
+                  form(action='cancel', method='POST')
+                    button.btn.btn-danger(type='submit') CANCEL 

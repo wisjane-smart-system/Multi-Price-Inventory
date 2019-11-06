@@ -15,6 +15,7 @@ html
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js')
     script(src='/bootstrap/js/sidebar.js')
     script(src='/bootstrap/js/select_table.js')
+    script(src='/bootstrap/js/sell-table.js')
   body
     #mySidebar.sidebar(onmouseover='toggleSidebar()', onmouseout='toggleSidebar()')
       a(href='/logout')
@@ -27,7 +28,7 @@ html
           i.material-icons add
           span.icon-text Products
       br
-      a(href='#')
+      a(href='/inv-prod')
           i.material-icons spa
           span.icon-text
           | Inventories

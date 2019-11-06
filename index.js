@@ -115,12 +115,30 @@ app.get('/logout', csrfProtection, function (req, res, next) {
       }
     })
   });
-app.post('/sell_temp', function (req, res) {
-  
-  var name = req.body.productname;
-  req.flash('success', 'horaaaah horaaah'+name)
-  res.redirect('/product/sell')
+
+//insert into temp_sales table
+app.post('/product/sell', function(req, res){
+  var proQua = req.body.quantityQ;
+  connection.query('INSERT INTO temp_sales VALUES ("", "'+proQua+'", "'+proQua+'", "'+proQua+'", "'+proQua+'", "'+proQua+'")', function(err, results, fields){
+
+      req.flash('success', 'Done !!!');
+      res.redirect('/product/sell');
+  })
 })
+
+//delete temp_sale data
+
+app.post('/product/cancel', function(req,res){
+
+  connection.query('DELETE FROM temp_sales', function(err,results,fields){
+
+      req.flash('success', 'cancelled successful')
+      res.redirect('/product/sell')
+  })
+})
+
+
+
 // //user reg
 // app.get('/reg', function(req, res){
 //   var userName = 'Tufail'
@@ -208,6 +226,32 @@ app.get('/products', authChecker, csrfProtection, function (req, res) {
 
 });
 
+//products
+app.get('/inv-prod', authChecker, csrfProtection, function (req, res) {
+
+  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products; SELECT SUM(total_cost) as totalQ FROM products', [1, 2, 3], function (error, results, fields) {
+    for (var i = 0; i < results[0].length; i++) {
+
+      for (var j = 0; j < results[1].length; j++) {
+        var vim = results[1][j];
+      }
+      for (var k = 0; k < results[2].length; k++) {
+        var to = results[2][k];
+      }
+      var row = results[0][i];
+    }
+
+    res.render('products', {
+      username: req.session.username,
+      totalQ: to.totalQ,
+      user: row.total,
+      product: vim.totalq,
+      product_list: results[1],
+    });
+  });
+
+});
+
 //add products route middleware
 app.post('/addproduct', function (request, response) {
   var productName = request.body.productname;
@@ -231,7 +275,7 @@ app.post('/addproduct', function (request, response) {
 //sell product
 app.get('/product/sell', authChecker, csrfProtection, function (req, res) {
 
-  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products; SELECT SUM(total_cost) as totalQ FROM products', [1, 2, 3], function (error, results, fields) {
+  connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products; SELECT SUM(total_cost) as totalQ FROM products; SELECT * FROM temp_sales as tempSa' , [1, 2, 3, 4], function (error, results, fields) {
     for (var i = 0; i < results[0].length; i++) {
 
       for (var j = 0; j < results[1].length; j++) {
@@ -239,6 +283,9 @@ app.get('/product/sell', authChecker, csrfProtection, function (req, res) {
       }
       for (var k = 0; k < results[2].length; k++) {
         var to = results[2][k];
+      }
+      for (var l = 0; l < results[3].length; l++) {
+        var temp = results[3][l];
       }
       var row = results[0][i];
     }
@@ -249,9 +296,11 @@ app.get('/product/sell', authChecker, csrfProtection, function (req, res) {
       user: row.total,
       product: vim.totalq,
       product_list: results[1],
+      temp1: results[3]
     });
   });
 })
+
 //add product
 app.get('/add_products', authChecker, csrfProtection, function (req, res) {
   connection.query('SELECT *, (SELECT COUNT(*)  FROM users) as total FROM users; SELECT *, (SELECT COUNT(*) FROM products) as totalq FROM products; SELECT SUM(total_cost) as totalQ FROM products', [1, 2, 3], function (error, results, fields) {
