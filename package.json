@@ -19,7 +19,7 @@
     "express-messages": "^1.0.1",
     "express-session": "^1.16.2",
     "mysql": "^2.17.1",
-    "pug": "^2.0.4",
+    "pug": "^3.0.1",
     "req-flash": "0.0.3"
   }
 }
